@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-int Items_price[]={10,20,15,25,100,130,250,50,230,20,10,5,200,230,250,150,200,220,50,80,160,100,80,90,150,30,25};
-string store[]={"0","Chocolates  ","fruits","cloths ","vegetables  ","drinks  ","Raw meat section  ","fish  ","dry foods  ","grocery  ","others","string  "};
+
 
 
 int x,sum=0,customer;
