@@ -2,6 +2,20 @@
 .STACK 100H 
 .DATA
 
+msg1 db 'welcome to our super market $'
+msg2 db '___________________________ $'
+
+msg_chocolates db "Chocolates Section:",13,10,13,10,"1. dairy milk    10 Tk",13,10,13,10, "2. kitkat        20 Tk$"
+msg_fruits db "Fruits Section:",13,10,13,10,"1.banana    10 Tk",13,10,13,10, "2.apple    15 Tk",13,10,13,10, "3.mango    25 Tk$"
+msg_cloths db "Cloths Section:",13,10,13,10,"1.Shirt    100 Tk",13,10,13,10, "2.Pant     130 Tk",13,10,13,10, "3.Shoe     250 Tk",13,10,13,10, "4.Skirt    50 Tk",13,10,13,10, "5.Saree    230 Tk$"
+msg_vegetables db "Vegetables Section:",13,10,13,10,"1.Carrot    20 Tk",13,10,13,10, "2.Raddish   10 Tk",13,10,13,10,"3.Tomato    5 Tk",13,10,13,10, "4.Beans     30 Tk$"
+msg_drinks db "Drinks Section:",13,10,13,10,"1.Coke    50 Tk",13,10,13,10,"2.tea     20 Tk",13,10,13,10, "3.coffee  30 Tk",13,10,13,10,"4.pepsi   80 Tk",13,10,13,10, "5.7up     95$"
+msg_meat db "Meat Section:",13,10,13,10,"1.Chicken   200  Tk",13,10,13,10, "2.mutton    230 Tk",13,10,13,10, "3.meat      250 Tk$"
+msg_fish db "Fish Section:",13,10,13,10,"1.hilsha    150 Tk",13,10,13,10, "2.prawn     200 Tk",13,10,13,10, "3.samon  220 Tk$"
+msg_dry db "Dry Foods Section:",13,10,13,10,"1.Chips    20 Tk",13,10,13,10, "2.cake     50 Tk",13,10,13,10, "3.bread    80 Tk",13,10,13,10, "4.jelly    30 Tk",13,10,13,10,"5.egg      8 Tk$"
+msg_others db "Others Section:",13,10,13,10,"1.shampoo    30 Tk",13,10,13,10, "2.soup       20 Tk",13,10,13,10, "3.cleaner    25 Tk$"
+msg_grocery db "Grocery Section:",13,10,13,10,"1.Rice     160 Tk",13,10,13,10,"2.dal      100 Tk",13,10,13,10,"3.muri     80 Tk",13,10,13,10, "4.flour    90 Tk",13,10,13,10, "5.wheat    150 Tk$"
+
 chocolates dw 0,10,20
 fruits dw 0,10,15,25
 cloths dw 0,100,130,250,50,255
@@ -13,10 +27,13 @@ dry_food dw 0,20,50,80,30,8
 grocery dw 0,160,100,80,90,150 
 others dw 0,30,20,25  
 
-SUM dw ?
+SUM dw 0
 
 ask_section db "From Which section you want to pick your items : $"
+
 ask_item db "Which item: $"
+
+
 
 
 
@@ -28,46 +45,75 @@ MAIN PROC
     MOV AX,@DATA
     MOV DS,AX
     
-ask_sec:
+ask_sec: 
+
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    
     mov ah,9
     lea dx,ask_section
     int 21h 
     
     mov ah,1
     int 21h
+    mov bl,al
     
-        
-    cmp al,'a'
+    mov AX, 03h
+    int 10h
+    
+    
+    cmp bl,97
     je choose_chocolates
     
-    cmp al,'b'
+    cmp bl,98
     je choose_fruits
     
-    cmp al,'c'
+    cmp bl,'c'
     je choose_cloths
     
-    cmp al,'d'
+    cmp bl,'d'
     je choose_vegetables
     
-    cmp al,'e'
+    cmp bl,'e'
     je choose_drinks
     
-    cmp al,'f'
+    cmp bl,'f'
     je choose_meat
     
-    cmp al,'g'
+    cmp bl,'g'
     je choose_fish
     
-    cmp al,'h'
+    cmp bl,'h'
     je choose_dry
     
-    cmp al,'i'
+    cmp bl,'i'
     je choose_grocery
     
-    cmp al,'j'
+    cmp bl,'j'
     je choose_others
     
 choose_chocolates:
+    
+    lea dx,msg_chocolates
+    mov ah,9
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h 
+    
+    
+
     mov ah,9
     lea dx,ask_item               ;asked the item to be bought
     int 21h 
@@ -92,8 +138,24 @@ choose_chocolates:
     jmp ask_sec                     ;jumped to section asking
     
 choose_fruits:
+    
+    lea dx,msg_fruits
     mov ah,9
-    lea dx,ask_item
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h 
+    
+    mov ah,9
+    lea dx,ask_item               ;asked item
     int 21h
     
     mov ah,1                      ;input item index
@@ -117,10 +179,27 @@ choose_fruits:
     
       
 
-choose_cloths:     
+choose_cloths:
+
+    lea dx,msg_cloths
     mov ah,9
-    lea dx,ask_item
-    int 21h   
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h 
+    
+    mov ah,9
+    lea dx,ask_item               ;asked item
+    int 21h     
+      
     
     mov ah,1                      ;input item index
     int 21h
@@ -144,10 +223,26 @@ choose_cloths:
     
     
     
-choose_vegetables: 
+choose_vegetables:
+    lea dx,msg_vegetables
     mov ah,9
-    lea dx,ask_item
-    int 21h  
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h 
+    
+    mov ah,9
+    lea dx,ask_item               ;asked item
+    int 21h 
+     
     
     mov ah,1                      ;input item index
     int 21h
@@ -171,9 +266,25 @@ choose_vegetables:
     
     
 choose_drinks:
+    lea dx,msg_drinks
     mov ah,9
-    lea dx,ask_item
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
     int 21h 
+    
+    mov ah,9
+    lea dx,ask_item               ;asked item
+    int 21h
+     
     
     mov ah,1                      ;input item index
     int 21h
@@ -197,9 +308,25 @@ choose_drinks:
     
     
 choose_meat: 
+    lea dx,msg_meat
     mov ah,9
-    lea dx,ask_item
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
     int 21h 
+    
+    mov ah,9
+    lea dx,ask_item               ;asked item
+    int 21h
+    
     
     mov ah,1                      ;input item index
     int 21h
@@ -222,10 +349,26 @@ choose_meat:
     
     
     
-choose_fish: 
+choose_fish:
+    lea dx,msg_fish
     mov ah,9
-    lea dx,ask_item
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
     int 21h 
+    
+    mov ah,9
+    lea dx,ask_item               ;asked item
+    int 21h 
+     
     
     mov ah,1                      ;input item index
     int 21h
@@ -248,10 +391,26 @@ choose_fish:
     
     
     
-choose_dry: 
+choose_dry:
+    lea dx,msg_dry
     mov ah,9
-    lea dx,ask_item
-    int 21h  
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h 
+    
+    mov ah,9
+    lea dx,ask_item               ;asked item
+    int 21h 
+      
     
     mov ah,1                      ;input item index
     int 21h
@@ -274,10 +433,26 @@ choose_dry:
     
     
     
-choose_grocery: 
+choose_grocery:
+    lea dx,msg_grocery
     mov ah,9
-    lea dx,ask_item
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
     int 21h 
+    
+    mov ah,9
+    lea dx,ask_item               ;asked item
+    int 21h 
+     
     
     mov ah,1                      ;input item index
     int 21h
@@ -299,9 +474,25 @@ choose_grocery:
     jmp ask_sec                     ;jumped to section asking
     
 choose_others:
+    lea dx,msg_others
     mov ah,9
-    lea dx,ask_item
-    int 21h  
+    int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h 
+    
+    mov ah,9
+    lea dx,ask_item               ;asked item
+    int 21h
+     
     
     mov ah,1                      ;input item index
     int 21h
@@ -422,5 +613,21 @@ SUMMATION PROC
 
    RET                            ; return control to the calling procedure
  OUTDEC ENDP      
+ 
+ 
+ 
+ 
+clear_screen proc 
+
+    ;mov ah, 0x06
+    ;mov al, 0
+    ; mov ax, 0
+    ;int 10h
+      
+    mov AX, 03h
+    int 10h
+
+clear_screen endp 
+
 
 END MAIN
