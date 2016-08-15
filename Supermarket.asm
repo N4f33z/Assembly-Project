@@ -27,13 +27,16 @@ dry_food dw 0,20,50,80,30,8
 grocery dw 0,160,100,80,90,150 
 others dw 0,30,20,25  
 
-SUM dw 0
+SUM dw 0  
+
+msg_section db "a. Chocolates",13,10,13,10,"b. Fruits",13,10,13,10,"c. Cloths",13,10,13,10,"d. Vegetables",13,10,13,10,"e. Drinks",13,10,13,10,"f. Raw Meat",13,10,13,10,"g. Fish",13,10,13,10,"h. Dry Foods",13,10,13,10,"i. Grocery",13,10,13,10,"j. Others$"  
 
 ask_section db "From Which section you want to pick your items : $"
 
+Total_purchase db "You have bought a total of: $"  
+taka db "Tk $"
+
 ask_item db "Which item: $"
-
-
 
 
 
@@ -47,11 +50,24 @@ MAIN PROC
     
 ask_sec: 
 
+    mov AX, 03h
+    int 10h  
+    
+    mov ah,9
+    lea dx,msg_section
+    int 21h
+    
     mov ah,2
     mov dl,13
     int 21h
     mov dl,10
     int 21h
+    
+    mov ah,2
+    mov dl,13
+    int 21h
+    mov dl,10
+    int 21h 
     
     mov ah,9
     lea dx,ask_section
@@ -64,11 +80,13 @@ ask_sec:
     mov AX, 03h
     int 10h
     
+    cmp bl,'0'
+    je calculate
     
-    cmp bl,97
+    cmp bl,'a'
     je choose_chocolates
     
-    cmp bl,98
+    cmp bl,'b'
     je choose_fruits
     
     cmp bl,'c'
@@ -514,6 +532,22 @@ choose_others:
     jmp ask_sec                     ;jumped to section asking
     
     
+    
+    
+calculate:
+   
+   mov ah,9
+   lea dx,total_purchase
+   int 21h
+   
+   mov ax,SUM
+   call OUTDEC
+   mov ah,9
+   lea dx,taka 
+   int 21h
+   
+   
+      
         
 END:
     MOV AH,4CH
