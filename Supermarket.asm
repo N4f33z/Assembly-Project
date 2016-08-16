@@ -62,21 +62,21 @@ MAIN PROC
     
 ask_sec: 
 
-    call clear_screen  
+    call clear_screen                                  ;called clear screen procedure
     
     mov ah,9
-    lea dx,msg1
+    lea dx,msg1                                        ;welcome message
     int 21h
     
-    call newl 
+    call newl                                          ;called newline procedure
     mov ah,9
-    lea dx,msg2
+    lea dx,msg2                                        ;welcome message
     int 21h 
     call newl
     call newl
     
-    mov ah,9
-    lea dx,msg_section
+    mov ah,9                                           
+    lea dx,msg_section                                 ;List of sections
     int 21h
     
     call newl 
@@ -84,48 +84,48 @@ ask_sec:
     
     
     mov ah,9
-    lea dx,ask_section
+    lea dx,ask_section                                ;Asked the preffered section
     int 21h 
     
     mov ah,1
     int 21h
     mov bl,al
-    
+                                                      ;cleared screen
     mov AX, 03h
     int 10h
     
     cmp bl,'0'
-    je calculate
+    je calculate                                    ;Jump to calculation after finishing purchase
     
     cmp bl,'a'
-    je choose_chocolates
+    je choose_chocolates                            ;jumped to chocolates section
     
     cmp bl,'b'
-    je choose_fruits
+    je choose_fruits                                ;jumped to Fruits section
     
     cmp bl,'c'
-    je choose_cloths
+    je choose_cloths                                ;jumped to Cloths section
     
     cmp bl,'d'
-    je choose_vegetables
+    je choose_vegetables                            ;jumped to Vegetables section
     
     cmp bl,'e'
-    je choose_drinks
+    je choose_drinks                                ;jumped to Drinks section
     
     cmp bl,'f'
-    je choose_meat
+    je choose_meat                                  ;jumped to Meats section
     
     cmp bl,'g'
-    je choose_fish
+    je choose_fish                                  ;jumped to Fish section
     
     cmp bl,'h'
-    je choose_dry
+    je choose_dry                                   ;jumped to Dry Foods section
     
     cmp bl,'i'
-    je choose_grocery
+    je choose_grocery                               ;jumped to Grocery section
     
     cmp bl,'j'
-    je choose_others 
+    je choose_others                                ;jumped to Others section
      
      
     jmp ask_sec
@@ -157,9 +157,9 @@ choose_chocolates:
     mov ah,1                      ;input item index
     int 21h
     sub al,48
-    xor bx,bx
+    xor bx,bx                     ;cleared bx
     mov bl,al
-    push bx
+    push bx                       ;pushed to stack
     
      
     lea si,chocolates
@@ -639,11 +639,11 @@ call newl
 calculate:
    
    mov ah,9
-   lea dx,total_purchase
+   lea dx,total_purchase                          ;printed purchase message
    int 21h
    
    mov ax,SUM
-   call OUTDEC
+   call OUTDEC                                    ;called outdec procedure
    mov ah,9
    lea dx,taka 
    int 21h
@@ -656,18 +656,18 @@ calculate:
     int 21h 
      
     mov bx,15
-    mov ax,SUM
-    mul bx 
+    mov ax,SUM                                      
+    mul bx                                         ;multiplied total sum with 15(bx=15)
    
     mov bx,100
     xor dx,dx 
-    div bx 
+    div bx                                         ;divided the multiplication by 100
     or ax, ax 
     
     mov A,ax 
     mov bx,A
     mov ax,SUM
-    sub ax,bx
+    sub ax,bx                                      ;Total sum after discount
     
     call OUTDEC  
     
@@ -676,7 +676,7 @@ calculate:
     call newl
     
     mov ah,9
-    lea dx,goodbye
+    lea dx,goodbye                                   ;Goodbye message
     int 21h
    
    
