@@ -2,8 +2,8 @@
 .STACK 100H 
 .DATA
 
-msg1 db 'welcome to our super market $'
-msg2 db '___________________________ $'
+msg1 db '                     welcome to our super market $'
+msg2 db '                     ___________________________ $'
 
 msg_chocolates db "Chocolates Section:",13,10,13,10,"1. dairy milk    10 Tk",13,10,13,10, "2. kitkat        20 Tk$"
 msg_fruits db "Fruits Section:",13,10,13,10,"1.banana    10 Tk",13,10,13,10, "2.apple    15 Tk",13,10,13,10, "3.mango    25 Tk$"
@@ -13,8 +13,8 @@ msg_drinks db "Drinks Section:",13,10,13,10,"1.Coke    50 Tk",13,10,13,10,"2.tea
 msg_meat db "Meat Section:",13,10,13,10,"1.Chicken   200  Tk",13,10,13,10, "2.mutton    230 Tk",13,10,13,10, "3.meat      250 Tk$"
 msg_fish db "Fish Section:",13,10,13,10,"1.hilsha    150 Tk",13,10,13,10, "2.prawn     200 Tk",13,10,13,10, "3.samon  220 Tk$"
 msg_dry db "Dry Foods Section:",13,10,13,10,"1.Chips    20 Tk",13,10,13,10, "2.cake     50 Tk",13,10,13,10, "3.bread    80 Tk",13,10,13,10, "4.jelly    30 Tk",13,10,13,10,"5.egg      8 Tk$"
-msg_others db "Others Section:",13,10,13,10,"1.shampoo    30 Tk",13,10,13,10, "2.soup       20 Tk",13,10,13,10, "3.cleaner    25 Tk$"
 msg_grocery db "Grocery Section:",13,10,13,10,"1.Rice     160 Tk",13,10,13,10,"2.dal      100 Tk",13,10,13,10,"3.muri     80 Tk",13,10,13,10, "4.flour    90 Tk",13,10,13,10, "5.wheat    150 Tk$"
+msg_others db "Others Section:",13,10,13,10,"1.shampoo    30 Tk",13,10,13,10, "2.soup       20 Tk",13,10,13,10, "3.cleaner    25 Tk",13,10,13,10,"4.Mop        110 Tk",13,10,13,10,"5.Mat        90 Tk$"
 
 chocolates dw 0,10,20
 fruits dw 0,10,15,25
@@ -25,16 +25,28 @@ meat dw 0,200,230,250
 fish dw 0,150,200,220
 dry_food dw 0,20,50,80,30,8
 grocery dw 0,160,100,80,90,150 
-others dw 0,30,20,25  
+others dw 0,30,20,25,110,90  
 
-SUM dw 0  
+SUM dw 0
+temp db ?
+A dw ? 
+
+
+
+arr dw ?
+
+catalogue dw 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 
 
 msg_section db "a. Chocolates",13,10,13,10,"b. Fruits",13,10,13,10,"c. Cloths",13,10,13,10,"d. Vegetables",13,10,13,10,"e. Drinks",13,10,13,10,"f. Raw Meat",13,10,13,10,"g. Fish",13,10,13,10,"h. Dry Foods",13,10,13,10,"i. Grocery",13,10,13,10,"j. Others$"  
 
-ask_section db "From Which section you want to pick your items : $"
+ask_section db "From Which section you want to pick your items(press 0 to end purchase) : $"
 
 Total_purchase db "You have bought a total of: $"  
-taka db "Tk $"
+taka db "Tk $" 
+
+With_Discount db "We are offering 15 percent discount on total purchase",13,10,13,10,"After Discount Your Total Purchase is: $"  
+ 
+goodbye db "Thank You For Purchasing From Our Supermarket. We hope to see you again $"
 
 ask_item db "Which item: $"
 
@@ -50,24 +62,26 @@ MAIN PROC
     
 ask_sec: 
 
-    mov AX, 03h
-    int 10h  
+    call clear_screen  
+    
+    mov ah,9
+    lea dx,msg1
+    int 21h
+    
+    call newl 
+    mov ah,9
+    lea dx,msg2
+    int 21h 
+    call newl
+    call newl
     
     mov ah,9
     lea dx,msg_section
     int 21h
     
-    mov ah,2
-    mov dl,13
-    int 21h
-    mov dl,10
-    int 21h
+    call newl 
+    call newl
     
-    mov ah,2
-    mov dl,13
-    int 21h
-    mov dl,10
-    int 21h 
     
     mov ah,9
     lea dx,ask_section
@@ -111,7 +125,10 @@ ask_sec:
     je choose_grocery
     
     cmp bl,'j'
-    je choose_others
+    je choose_others 
+     
+     
+    jmp ask_sec
     
 choose_chocolates:
     
@@ -136,9 +153,15 @@ choose_chocolates:
     lea dx,ask_item               ;asked the item to be bought
     int 21h 
     
+    
     mov ah,1                      ;input item index
     int 21h
-    sub al,48 
+    sub al,48
+    xor bx,bx
+    mov bl,al
+    push bx
+    
+     
     lea si,chocolates
     
     while_choco:
@@ -153,6 +176,7 @@ choose_chocolates:
     do_choco: 
     mov dx,[si]                     ;retrieved the index element
     add SUM,dx                      ;added to the total cost
+    mov bl,al
     jmp ask_sec                     ;jumped to section asking
     
 choose_fruits:
@@ -178,7 +202,11 @@ choose_fruits:
     
     mov ah,1                      ;input item index
     int 21h
-    sub al,48 
+    sub al,48
+    xor bx,bx
+    mov bl,al
+    add bl,2
+    push bx 
     lea si,fruits
     
     while_fruits:
@@ -223,6 +251,10 @@ choose_cloths:
     int 21h
     sub al,48 
     lea si,cloths
+    xor bx,bx
+    mov bl,al
+    add bl,5
+    push bx
     
     while_cloths:
           
@@ -264,7 +296,11 @@ choose_vegetables:
     
     mov ah,1                      ;input item index
     int 21h
-    sub al,48 
+    sub al,48
+    xor bx,bx
+    mov bl,al
+    add bl,10
+    push bx 
     lea si,vegetables
     
     while_vegetables:
@@ -307,6 +343,10 @@ choose_drinks:
     mov ah,1                      ;input item index
     int 21h
     sub al,48 
+    xor bx,bx
+    mov bl,al
+    add bl,14
+    push bx
     lea si,drinks
     
     while_drinks:
@@ -349,6 +389,10 @@ choose_meat:
     mov ah,1                      ;input item index
     int 21h
     sub al,48 
+    xor bx,bx
+    mov bl,al
+    add bl,19
+    push bx
     lea si,meat
     
     while_meat:
@@ -390,7 +434,11 @@ choose_fish:
     
     mov ah,1                      ;input item index
     int 21h
-    sub al,48 
+    sub al,48
+    xor bx,bx
+    mov bl,al 
+    add bl,22
+    push bx 
     lea si,fish
     
     while_fish:
@@ -432,7 +480,11 @@ choose_dry:
     
     mov ah,1                      ;input item index
     int 21h
-    sub al,48 
+    sub al,48
+    xor bx,bx
+    mov bl,al 
+    add bl,25
+    push bx 
     lea si,dry_food
     
     while_dry:
@@ -474,7 +526,11 @@ choose_grocery:
     
     mov ah,1                      ;input item index
     int 21h
-    sub al,48 
+    sub al,48
+    xor bx,bx
+    mov bl,al 
+    add bl,30
+    push bx 
     lea si,grocery
     
     while_grocery:
@@ -514,7 +570,11 @@ choose_others:
     
     mov ah,1                      ;input item index
     int 21h
-    sub al,48 
+    sub al,48
+    xor bx,bx
+    mov bl,al 
+    add bl,35
+    push bx
     lea si,others
     
     while_others:
@@ -532,8 +592,50 @@ choose_others:
     jmp ask_sec                     ;jumped to section asking
     
     
-    
-    
+
+
+start1:     
+;mov cx,3
+
+
+stack_array:
+
+
+xor bx,bx
+pop bx
+lea si,catalogue 
+while_stack:
+ 
+ cmp bx,0   
+ je here
+ add si,2 
+ dec bx
+ jmp while_stack
+ 
+ here: 
+ 
+ inc [si]
+  
+loop stack_array
+
+
+lea si,catalogue  
+
+
+start11: 
+mov cx,3 
+print_array: 
+
+;mov ah,2
+;mov dx,[si]            
+;int 21h
+;call newl 
+;add si,2
+;xor bx,bx
+
+loop print_array
+
+call newl     
 calculate:
    
    mov ah,9
@@ -545,14 +647,46 @@ calculate:
    mov ah,9
    lea dx,taka 
    int 21h
+    
+    call newl
+    call newl
+     
+    mov ah,9
+    lea dx,With_Discount
+    int 21h 
+     
+    mov bx,15
+    mov ax,SUM
+    mul bx 
+   
+    mov bx,100
+    xor dx,dx 
+    div bx 
+    or ax, ax 
+    
+    mov A,ax 
+    mov bx,A
+    mov ax,SUM
+    sub ax,bx
+    
+    call OUTDEC  
+    
+    call newl
+    call newl
+    call newl
+    
+    mov ah,9
+    lea dx,goodbye
+    int 21h
+   
    
    
       
         
 END:
-    MOV AH,4CH
-    INT 21H
-    MAIN ENDP
+    mov ah,4ch
+    int 21h
+    main endp
      
      ;|_____________________ NEWLINE PROCEDURE______________________|;
     
@@ -561,37 +695,11 @@ newl proc
     mov dl,13
     int 21h
     mov dl,10
-    int 21h  
+    int 21h 
+    ret 
 newl endp
     
     
-    ;|_____________________ SUM PROCEDURE______________________|;
-    
-    
-SUMMATION PROC
-   ; this procedure will calculate the sum of an array
-   ; input : SI=offset address of the array
-   ;       : BX=size of the array
-   ; output : AX=sum of the array
-
-   PUSH CX                        ; push CX onto the STACK
-   PUSH DX                        ; push DX onto the STACK
-
-   XOR AX, AX                     ; clear AX
-   XOR DX, DX                     ; clear DX
-   MOV CX, BX                     ; set CX=BX
-
-   @SUM:                          ; loop label
-     MOV DL, [SI]                 ; set DL=[SI]
-     ADD AX, DX                   ; set AX=AX+DX
-     add SI,2                       ; set SI=SI+1
-   LOOP @SUM                      ; jump to label @SUM while CX!=0
-
-   POP DX                         ; pop a value from STACK into DX
-   POP CX                         ; pop a value from STACK into CX
-
-   RET                            ; return control to the calling procedure
- SUMMATION ENDP
    
    
    ;|_____________________OUTDEC PROCEDURE______________________|;
@@ -599,57 +707,45 @@ SUMMATION PROC
    
  
  OUTDEC PROC
-   ; this procedure will display a decimal number
-   ; input : AX
-   ; output : none
+    ;display a decimal number
+   
+   
 
-   PUSH BX                        ; push BX onto the STACK
-   PUSH CX                        ; push CX onto the STACK
-   PUSH DX                        ; push DX onto the STACK
+   push bx                        
+   push cx                        
+   push dx                        
 
-   CMP AX, 0                      ; compare AX with 0
-   JGE @START                     ; jump to label @START if AX>=0
+   start:                        
 
-   PUSH AX                        ; push AX onto the STACK
+   xor cx, cx                     
+   mov bx, 10                     ; set bx=10
 
-   MOV AH, 2                      ; set output function
-   MOV DL, "-"                    ; set DL='-'
-   INT 21H                        ; print the character
+   output:                       ; loop starts
+     xor dx, dx                  ;dx holds the reminder value 
+     div bx                       ; divide ax by bx
+     push dx                     ; push DX onto the STACK
+     inc cx                       
+     or ax, ax                    
+   jne output                   ; jump to OUTPUT if ZF=0
 
-   POP AX                         ; pop a value from STACK into AX
+   mov ah, 2                     
+                                   ;cx value already calculated before
+                                   
+   display:                      ; loop 
+     pop dx                       ; pop a value from STACK to DX
+     or dl, 30h                   ;decimal to ascii code
+     int 21h                      
+   loop display                  
 
-   NEG AX                         ; take 2's complement of AX
+   pop dx                        
+   pop cx                        
+   pop bx                        
 
-   @START:                        ; jump label
-
-   XOR CX, CX                     ; clear CX
-   MOV BX, 10                     ; set BX=10
-
-   @OUTPUT:                       ; loop label
-     XOR DX, DX                   ; clear DX
-     DIV BX                       ; divide AX by BX
-     PUSH DX                      ; push DX onto the STACK
-     INC CX                       ; increment CX
-     OR AX, AX                    ; take OR of Ax with AX
-   JNE @OUTPUT                    ; jump to label @OUTPUT if ZF=0
-
-   MOV AH, 2                      ; set output function
-
-   @DISPLAY:                      ; loop label
-     POP DX                       ; pop a value from STACK to DX
-     OR DL, 30H                   ; convert decimal to ascii code
-     INT 21H                      ; print a character
-   LOOP @DISPLAY                  ; jump to label @DISPLAY if CX!=0
-
-   POP DX                         ; pop a value from STACK into DX
-   POP CX                         ; pop a value from STACK into CX
-   POP BX                         ; pop a value from STACK into BX
-
-   RET                            ; return control to the calling procedure
- OUTDEC ENDP      
+   ret                            
+ OUTDEC endp      
  
  
- 
+      ;|_____________________Clear Screen PROCEDURE______________________|;
  
 clear_screen proc 
 
@@ -659,7 +755,8 @@ clear_screen proc
     ;int 10h
       
     mov AX, 03h
-    int 10h
+    int 10h 
+    ret
 
 clear_screen endp 
 
