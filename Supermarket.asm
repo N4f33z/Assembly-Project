@@ -1,3 +1,4 @@
+
 .MODEL SMALL
 .STACK 100H 
 .DATA
@@ -156,6 +157,10 @@ choose_chocolates:
     
     mov ah,1                      ;input item index
     int 21h
+    
+    cmp al,'2'
+    jg ask_sec 
+    
     sub al,48
     xor bx,bx                     ;cleared bx
     mov bl,al
@@ -202,6 +207,8 @@ choose_fruits:
     
     mov ah,1                      ;input item index
     int 21h
+    cmp al,'3'
+    jg ask_sec
     sub al,48
     xor bx,bx
     mov bl,al
@@ -249,6 +256,8 @@ choose_cloths:
     
     mov ah,1                      ;input item index
     int 21h
+    cmp al,'5'
+    jg ask_sec
     sub al,48 
     lea si,cloths
     xor bx,bx
@@ -296,6 +305,8 @@ choose_vegetables:
     
     mov ah,1                      ;input item index
     int 21h
+    cmp al,'4'
+    jg ask_sec
     sub al,48
     xor bx,bx
     mov bl,al
@@ -342,6 +353,8 @@ choose_drinks:
     
     mov ah,1                      ;input item index
     int 21h
+    cmp al,'5'
+    jg ask_sec
     sub al,48 
     xor bx,bx
     mov bl,al
@@ -388,6 +401,8 @@ choose_meat:
     
     mov ah,1                      ;input item index
     int 21h
+    cmp al,'3'
+    jg ask_sec
     sub al,48 
     xor bx,bx
     mov bl,al
@@ -434,6 +449,8 @@ choose_fish:
     
     mov ah,1                      ;input item index
     int 21h
+    cmp al,'3'
+    jg ask_sec
     sub al,48
     xor bx,bx
     mov bl,al 
@@ -480,6 +497,8 @@ choose_dry:
     
     mov ah,1                      ;input item index
     int 21h
+    cmp al,'5'
+    jg ask_sec
     sub al,48
     xor bx,bx
     mov bl,al 
@@ -526,6 +545,8 @@ choose_grocery:
     
     mov ah,1                      ;input item index
     int 21h
+    cmp al,'5'
+    jg ask_sec
     sub al,48
     xor bx,bx
     mov bl,al 
@@ -570,6 +591,8 @@ choose_others:
     
     mov ah,1                      ;input item index
     int 21h
+    cmp al,'5'
+    jg ask_sec
     sub al,48
     xor bx,bx
     mov bl,al 
@@ -762,3 +785,6 @@ clear_screen endp
 
 
 END MAIN
+
+    
+
